@@ -12,8 +12,8 @@ Rectangle {
 
     signal clicked
 
-    implicitWidth: buttonLabel.width + 40
-    implicitHeight: buttonLabel.height + 5
+    implicitWidth: measureText.width + 40
+    implicitHeight: measureText.height + 5
 
     color: "#D4E3EE"
 
@@ -32,8 +32,20 @@ Rectangle {
 
     Text {
         id: buttonLabel
-        anchors.centerIn: container
         text: container.text
-        color: container.textcolor
+
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        wrapMode: Text.WordWrap
+
+        width: container.width
+        height: container.height
+    }
+
+    Text {
+        id: measureText
+        text: container.text
+        visible: false
+        font: buttonLabel.font
     }
 }
