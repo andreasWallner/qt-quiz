@@ -4,29 +4,36 @@ Rectangle {
     id: container
 
     property string text: "unset"
-    property color color: "white"
-    property color textcolor: "black"
-    property font font
+    property color textcolor: "#555"
+    property alias font : buttonLabel.font
+    property bool enabled : true
+
+    onEnabledChanged: console.log('changed')
 
     signal clicked
 
-    width: buttonLabel.width + 20
-    height: buttonLabel.height + 5
+    implicitWidth: buttonLabel.width + 40
+    implicitHeight: buttonLabel.height + 5
+
+    color: "#D4E3EE"
 
     border {
-        width: 1
+        width: hitbox.containsMouse ? 3 : 1
         color: "white"
     }
     smooth: true
 
     MouseArea {
+        id: hitbox
         anchors.fill: parent
-        onClicked: container.clicked();
+        onClicked: container.enabled ? container.clicked() : null;
+        hoverEnabled: true
     }
 
     Text {
+        id: buttonLabel
         anchors.centerIn: container
-        color: textcolor
-        font: font
+        text: container.text
+        color: container.textcolor
     }
 }

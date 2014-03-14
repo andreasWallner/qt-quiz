@@ -4,7 +4,14 @@ import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
 
 Item {
-    property int currentQuestion : 0
+    id: container
+    property int currentQuestionIndex : 0
+    property QtObject currentQuestion : null
+    property int correctCnt : 0
+    property int wrongCnt : 0
+
+    implicitWidth: pageView.implicitWidth
+    implicitHeight: pageView.implicitHeight
 
     RadialGradient {
         anchors.fill: parent
@@ -14,20 +21,64 @@ Item {
         }
     }
 
-    property Component startPage: StartPage {
-        onStart: {
-            questionsPage.question = questionList.get(0)
+    property Component startPage: NotePage {
+        text: "Infineon Quiz"
+        buttontext: "STARTEN"
+        onDone: {
+            container.correctCnt = 0
+            container.wrongCnt = 0
+            currentQuestionIndex = 0
             pageView.push({item:questionsPage, replace:true})
+            currentQuestion = questionList.get(0)
+        }
+    }
+
+    property Component resultPage: NotePage {
+        text: "Resultat: " + container.correctCnt + " von " + (container.correctCnt + container.wrongCnt)
+        buttontext: "RESET"
+
+        onDone: {
+            pageView.push({item:startPage, replace:true})
+        }
+    }
+
+    property Component correctionPage: NotePage {
+        text: container.currentQuestion.correction
+        buttontext: "WEITER"
+
+        onDone: {
+            currentQuestionIndex += 1
+            if(currentQuestionIndex >= questionList.count) {
+                pageView.push({item:resultPage, replace:true})
+            }
+            else {
+                currentQuestion = questionList.get(currentQuestionIndex)
+                pageView.push({item:questionsPage, replace:true})
+            }
         }
     }
 
     property Component questionsPage: QuestionPage {
+        question: currentQuestion
         onCorrectAnswerClicked: {
-            currentQuestion += 1
-            if(currentQuestion >= questionList.count)
-                console.log("finished")
+            container.correctCnt += 1
+            currentQuestionIndex += 1
+
+            if(currentQuestionIndex >= questionList.count)
+                pageView.push({item:resultPage, replace:true})
             else
-                question = questionList.get(currentQuestion)
+                currentQuestion = questionList.get(currentQuestionIndex)
+
+            console.log("correct " + container.correctCnt)
+            console.log("wrong " + container.wrongCnt)
+        }
+        onWrongAnswerClicked: {
+            container.wrongCnt += 1
+
+            pageView.push({item:correctionPage, replace:true})
+
+            console.log("correct " + container.correctCnt)
+            console.log("wrong " + container.wrongCnt)
         }
     }
 
@@ -90,6 +141,7 @@ Item {
 
         ListElement {
             text: "can you click a button"
+            correction: "you did click on a button, didn't you?"
             correctAnswerIndex: 2
             answers: [
                 ListElement { text: "no" },
@@ -100,12 +152,17 @@ Item {
         }
         ListElement {
             text: "is it late?"
+            correction: "you don't want to know when this was written"
             correctAnswerIndex: 1
             answers: [
                 ListElement { text: "no" },
                 ListElement { text: "yes" }
             ]
         }
+    }
+
+    Component.onCompleted: {
+        currentQuestion = questionList.get(0)
     }
 }
 

@@ -7,8 +7,7 @@ DEPLOYMENTFOLDERS = folder_01
 QML_IMPORT_PATH =
 
 # The .cpp file which was generated for your project. Feel free to hack it.
-SOURCES += main.cpp \
-    question.cpp
+SOURCES += main.cpp
 
 # Installation path
 # target.path =
@@ -17,5 +16,7 @@ SOURCES += main.cpp \
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
 
-HEADERS += \
-    question.h
+HEADERS +=
+
+OTHER_FILES += \
+    qml/quiz/NotePage.qml

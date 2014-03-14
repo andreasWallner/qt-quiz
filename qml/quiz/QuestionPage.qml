@@ -28,7 +28,7 @@ ColumnLayout {
 
         text: question.text
         wrapMode: Text.WordWrap
-        font.pointSize: 14
+        font.pointSize: 20
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
     }
@@ -46,9 +46,17 @@ ColumnLayout {
             model: question.answers
             AnswerButton {
                 text: modelData
+
+                anchors.rightMargin: 50
+                anchors.leftMargin: 50
+
+                font.pointSize: 20
+
                 onClicked: {
-                    for(var i = 0; i < parent.count; ++i)
-                        parent.itemAt(i).enabled = false
+                    for(var i = 0; i < answerRepeater.count; ++i) {
+                        answerRepeater.itemAt(i).enabled = false
+                        console.log(i)
+                    }
 
                     if(index === question.correctAnswerIndex) {
                         correctAnswerClickedDelay.start()

@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
     QtQuick2ApplicationViewer viewer;
     viewer.setMainQmlFile(QStringLiteral("qml/quiz/main.qml"));
     viewer.showExpanded();
-
+    //CHANGE TO
+    //viewer.showFullScreen();
     return app.exec();
 }
